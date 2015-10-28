@@ -136,7 +136,9 @@ $( document ).on( resume.eventTrigger, resume.render );
       if ( typeof fieldnames === 'undefined' ) {
         $.getJSON(
           'https://api.knackhq.com/v1/objects/' + objectId + '/fields',
-          buffer = response.fields
+          function(response){
+            buffer = response.fields;
+          }
         );
       } else {
         buffer = fieldnames;
