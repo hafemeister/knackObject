@@ -39,6 +39,8 @@ window.KnackObject = function(options) { 'use strict';
     return extended;
   }
 
+  this.settings = extend( this.defaults, options );
+
   // when using this function in the Knack API it will be instantiated with an eval()
   // this is an easy way to stop this script and set your breakpoints
   if (this.settings.debug) {
@@ -56,14 +58,10 @@ window.KnackObject = function(options) { 'use strict';
     }
   } );
 
-  this.settings = extend( this.defaults, options );
-
-
   if ( this.settings.renderNow === true ) {
     this.settings.showSpinner.call();
     this.render();
     this.settings.hideSpinner.call();
-
   }
 };
 
