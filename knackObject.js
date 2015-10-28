@@ -65,6 +65,7 @@ function KnackObject(options) { 'use strict';
     this.settings.hideSpinner.call();
 
   }
+}
 
 KnackObject.prototype = {
 
@@ -232,7 +233,7 @@ KnackObject.prototype = {
           for ( x = 0, l = objects.length; x < l; x++ ) {
 
             // only recurse through records not in settings.templateSkipRecord
-            if ( ! object[x].label in this.settings.templateSkipRecord ) {
+            if ( ! ( object[x].label in this.settings.templateSkipRecord ) ) {
               _buffer += this.template( objects[x], level );
             }
           }
