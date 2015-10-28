@@ -302,3 +302,5 @@ KnackObject.prototype = {
       return 'knack-page-render.'+ this.settings. viewId;
     }
   };
+
+ window.KnackObject = KnackObject;
