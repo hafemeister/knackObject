@@ -305,4 +305,4 @@ $( document ).on( resume.eventTrigger, resume.render );
       return 'knack-page-render.'+ this.settings. viewId;
     }
   };
-}( window, window.JQuery ) );
+}( window, window.Knack.$ ) );
