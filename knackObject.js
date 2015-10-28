@@ -45,12 +45,6 @@ $( document ).on( resume.eventTrigger, resume.render );
 
     this.settings = extend( this.defaults, options );
 
-    // when using this function in the Knack API it will be instantiated with an eval()
-    // this is an easy way to stop this script and set your breakpoints
-    if (this.settings.debug) {
-      debugger;
-    }
-
     $.ajaxSetup( {
 
       type    : 'GET',
@@ -100,6 +94,9 @@ $( document ).on( resume.eventTrigger, resume.render );
       /* when rendering the object to HTML, skip any record with a label in this array */
       'templateSkipRecord' : [],
 
+      /* when getting the records from the server, skip any record with a label in this array */
+      'skipRecord'      : [],
+
       /* javascript to show a throbber while function runs */
       'showSpinner' : function() {Knack.showSpinner();},
 
@@ -137,8 +134,12 @@ $( document ).on( resume.eventTrigger, resume.render );
         $.getJSON(
           'https://api.knackhq.com/v1/objects/' + objectId + '/fields',
           function(response){
-            buffer = response.fields;
-          }
+            for ( var x = 0, l= response.fields.length; x < l; x++){
+              if ( ! ( response.fields[x].label in this.settings.getSkipRecord ) ) {
+                buffer[x] = response.fields[x];
+              }
+            }
+          }.bind(this)
         );
       } else {
         buffer = fieldnames;
