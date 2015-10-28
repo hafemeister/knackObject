@@ -135,7 +135,7 @@ $( document ).on( resume.eventTrigger, resume.render );
           'https://api.knackhq.com/v1/objects/' + objectId + '/fields',
           function(response){
             for ( var x = 0, l= response.fields.length; x < l; x++){
-              if ( ! ( response.fields[x].label in this.settings.getSkipRecord ) ) {
+              if ( this.settings.getSkipRecord.indexOf( response.fields[x].label ) ) {
                 buffer[x] = response.fields[x];
               }
             }
