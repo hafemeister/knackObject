@@ -115,8 +115,8 @@ $( document ).on( resume.eventTrigger, resume.render );
        */
     get : function ( objectId, recordId, fieldnames ) {
 
-      var buffer = [];
-      var tempRecord = [];
+      var _buffer = [];
+      var _record = [];
       var childFieldNames = [];
 
       // get default values for passed variables if they are undefined
@@ -133,23 +133,29 @@ $( document ).on( resume.eventTrigger, resume.render );
       if ( typeof fieldnames === 'undefined' ) {
         $.getJSON(
           'https://api.knackhq.com/v1/objects/' + objectId + '/fields',
-          function(response){
-            for ( var x = 0, l= response.fields.length; x < l; x++){
-              if ( this.settings.getSkipRecord.indexOf( response.fields[x].label ) ) {
-                buffer[x] = response.fields[x];
+          function( response ){
+
+            // loop through the returned fields array of objects
+            for ( var x = 0, l = response.fields.length; x < l; x++){
+
+              // only copy the field is not supposed to be skipped
+              if ( this.settings.skipRecord.indexOf( response.fields[x].label ) !== -1 ) {
+
+                // then add the field to the buffer
+                _buffer[x] = response.fields[x];
               }
             }
           }.bind(this)
         );
       } else {
-        buffer = fieldnames;
+        _buffer = fieldnames;
       }
 
       // get the specific data for the object fields
       $.getJSON(
         'https://api.knackhq.com/v1/objects/' + objectId + '/records/' + recordId,
         function(response) {
-          tempRecord = response;
+          _record = response;
         }
       );
 
@@ -157,11 +163,11 @@ $( document ).on( resume.eventTrigger, resume.render );
       for ( var x = 0, l = buffer.length; x < l; x++ ) {
 
         //if this field is not a connection (relational)
-        if (buffer[x].type !== 'connection' ) {
+        if ( _buffer[x].type !== 'connection' ) {
 
           //then just store the server compiled html and raw data
-          buffer[x].html = tempRecord[ buffer[x].key ];
-          buffer[x].raw  = tempRecord[ buffer[x].key + '_raw' ];
+          _buffer[x].html = _record[ _buffer[x].key ];
+          _buffer[x].raw  = _record[ _buffer[x].key + '_raw' ];
 
         //otherwise this is a relational field (connection)
         } else {
@@ -184,7 +190,7 @@ $( document ).on( resume.eventTrigger, resume.render );
               //recursivly cooalate the connection's records
               buffer[x].connection[index]            = {};
               buffer[x].connection[index].records    = {};
-              buffer[x].connection[index].records    = this.get( buffer[x].relationship.object, child.id, childFieldNames);
+              buffer[x].connection[index].records    = this.get( buffer[x].relationship.object, child.id, childFieldNames );
               buffer[x].connection[index].id         = child.id;
               buffer[x].connection[index].identifier = child.identifier;
             }, 
