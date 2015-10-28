@@ -101,10 +101,10 @@ $( document ).on( resume.eventTrigger, resume.render );
       'templateSkipRecord' : [],
 
       /* javascript to show a throbber while function runs */
-      'showSpinner' : Knack.showSpinner(),
+      'showSpinner' : function() {Knack.showSpinner();},
 
       /* javascript to hide a throbber once function finishes */
-      'hideSpinner'  : Knack.hideSpinner()
+      'hideSpinner'  : function() {Knack.hideSpinner();},
     },
 
     /**
