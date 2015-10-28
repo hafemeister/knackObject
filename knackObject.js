@@ -3,6 +3,19 @@
 /**
  * crawls through a knack object by making the dirty API queries to mimic full relational queru responces.
  * @param {object} options [ see prototype defaults for description ]
+ * @example
+ * ,,,javascript
+ * var resume = new KnackObject({
+    'debug'              : true,
+    'appId'              : '562c434ff0d6ccc53cd77925',
+    'apiKey'             : '652e2800-7d44-11e5-90be-45cb5dc27cc2',
+    'objectId'           : 'object_8',
+    'recordId'           : document.URL.split('#view/')[1],
+    'viewId'             : 'scene_67',
+    'templateSkipRecord' : 'identifier',
+});
+
+$( document ).on( resume.eventTrigger, resume.render );
  */
 function KnackObject(options) { 'use strict';
 
@@ -289,16 +302,3 @@ KnackObject.prototype = {
       return 'knack-page-render.'+ this.settings. viewId;
     }
   };
-
-
-var resume = new KnackObject({
-  'debug'              : true,
-  'appId'              : '5616d533b74590da346bfd1e',
-  'apiKey'             : '9231e790-6e19-11e5-b1cd-755aac759244',
-  'objectId'           : 'object_8',
-  'recordId'           : document.URL.split('#view/')[1],
-  'viewId'             : 'scene_67',
-  'templateSkipRecord' : 'identifier',
-});
-
-$( document ).on( resume.eventTrigger, resume.render );
