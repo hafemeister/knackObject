@@ -177,15 +177,18 @@ $( document ).on( resume.eventTrigger, resume.render );
           );
 
           //loop through each connection's records
-          tempRecord[ buffer[x].key +'_raw' ].forEach( function( child, index ) {
+          tempRecord[ buffer[x].key +'_raw' ].forEach( 
+            function( child, index ) {
 
-            //recursivly cooalate the connection's records
-            buffer[x].connection[index]            = {};
-            buffer[x].connection[index].records    = {};
-            buffer[x].connection[index].records    = this.get( buffer[x].relationship.object, child.id, childFieldNames);
-            buffer[x].connection[index].id         = child.id;
-            buffer[x].connection[index].identifier = child.identifier;
-          } );
+              //recursivly cooalate the connection's records
+              buffer[x].connection[index]            = {};
+              buffer[x].connection[index].records    = {};
+              buffer[x].connection[index].records    = this.get( buffer[x].relationship.object, child.id, childFieldNames);
+              buffer[x].connection[index].id         = child.id;
+              buffer[x].connection[index].identifier = child.identifier;
+            }, 
+            this 
+          );
         }
       }
 
