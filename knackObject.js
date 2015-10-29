@@ -151,13 +151,13 @@ $( document ).on( resume.eventTrigger, resume.render );
       // Get the field names for the object's fields if not provided
       // this saves pummeling the Knack API more than necessary
       if ( typeof fieldnames === 'undefined' ) {
-        fieldnames = this.getFields(objectId);
+        fieldnames = this.getFields( objectId );
       } 
 
       // get the specific data for the record fields
       $.getJSON(
         'https://api.knackhq.com/v1/objects/' + objectId + '/records/' + recordId,
-        function(response) {
+        function( response ) {
           _records = response;
         }
       );
@@ -226,7 +226,7 @@ $( document ).on( resume.eventTrigger, resume.render );
       } 
 
       // if objects is an array of objects,
-      if ( objects.isArray() ) {
+      if ( objects.isArray ) {
 
       // check for a special case
       // if there are 3 connection and they are labeled "Identifier", "Title" and "Details"
