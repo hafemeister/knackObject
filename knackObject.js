@@ -133,6 +133,7 @@ $( document ).on( resume.eventTrigger, resume.render );
 
       var _buffer = [];
       var _records = [];
+      var _fieldNames = [];
       var _childFieldNames = [];
 
       // get default values for passed variables if they are undefined
@@ -147,8 +148,10 @@ $( document ).on( resume.eventTrigger, resume.render );
       // Get the field names for the object's fields if not provided
       // this saves pummeling the Knack API more than necessary
       if ( typeof fieldnames === 'undefined' ) {
-        fieldnames = this.getFields( objectId );
-      } 
+        _fieldNames = this.getFields( objectId );
+      } else {
+        _fieldNames = fieldnames;
+      }
 
       // get the specific data for the record fields
       $.getJSON(
@@ -159,40 +162,36 @@ $( document ).on( resume.eventTrigger, resume.render );
       );
 
       //loop through each field object in the array
-      for ( var x = 0, l = fieldnames.length; x < l; x++ ) {
+      for ( var x = 0, l = _fieldNames.length; x < l; x++ ) {
 
-        _buffer[x] = fieldnames[x];
+        _buffer[x] = _fieldNames[x];
 
         //if this field is a connection (relational)
-        if ( fieldnames[x].type === 'connection' ) {
+        if ( _fieldNames[x].type === 'connection' ) {
 
-          _childFieldNames = this.getFields( fieldnames[x].relationship.object );
+          _childFieldNames = this.getFields( _fieldNames[x].relationship.object );
 
           // loop through each connection's records and get the "raw" data
           // their naming convention looks like this "field_21_raw"
-          _buffer[x].connection = [];
-          _buffer[x].connection = _records[ fieldnames[x].key +'_raw' ]
-            .forEach(
-              function( record ) {
+            _records[ _fieldNames[x].key +'_raw' ].forEach( function( record, index ) {
 
-                var _temp = {
-                  'id'         : record.id,
-                  'identifier' : record.identifier,
-                  'records'    : this.get( 
-                    fieldnames[x].relationship.object, 
-                    record.id, 
-                    _childFieldNames
-                  )
-                };
-                return  _temp;
-              },
-              this
-            );
+              //recursivly cooalate the connection's records
+              _buffer[x].connection[index]            = {};
+              _buffer[x].connection[index].records    = [];
+              _buffer[x].connection[index].id         = record.id;
+              _buffer[x].connection[index].identifier = record.identifier;
+              _buffer[x].connection[index].records    = this.get( 
+                  _fieldnames[x].relationship.object, 
+                  record.id, 
+                  _childFieldNames
+              );
+
+            }, this );
 
         //otherwise the record is not relational, get html and raw data
         } else {
-          _buffer[x].html = _records[ fieldnames[x].key ];
-          _buffer[x].raw  = _records[ fieldnames[x].key + '_raw' ];
+          _buffer[x].html = _records[ _fieldNames[x].key ];
+          _buffer[x].raw  = _records[ _fieldNames[x].key + '_raw' ];
         }
       }
 
