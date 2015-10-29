@@ -104,22 +104,7 @@ $( document ).on( resume.eventTrigger, resume.render );
       'hideSpinner'  : function() {Knack.hideSpinner();},
     },
 
-    /**
-       * recursivly coalates a knack object to show the field labels and the records
-       * if the record data is a connection (relation), then coalate its data too
-       * @requires  JQuery
-       * @param  {string|undefined} objectId   @optional the identifier of the knack object to query
-       * @param  {string|undefined} recordId   @optional the identifier of the record in the object to query
-       * @param  {object|undefined} fieldnames @optional precomputing the fieldnames saves ajax requests
-       * @return {object}                      the coalated object
-       */
-    get : function ( objectId, recordId, fieldnames ) {
-
-      var _buffer = [];
-      var _record = [];
-      var _childFieldNames = [];
-
-      var _getFields = function( objectId ){
+    getFields : function( objectId ){
 
         var _fields = [];
         
@@ -135,8 +120,22 @@ $( document ).on( resume.eventTrigger, resume.render );
           } 
         );
         return _fields;
-      };
+      },
 
+    /**
+       * recursivly coalates a knack object to show the field labels and the records
+       * if the record data is a connection (relation), then coalate its data too
+       * @requires  JQuery
+       * @param  {string|undefined} objectId   @optional the identifier of the knack object to query
+       * @param  {string|undefined} recordId   @optional the identifier of the record in the object to query
+       * @param  {object|undefined} fieldnames @optional precomputing the fieldnames saves ajax requests
+       * @return {object}                      the coalated object
+       */
+    get : function ( objectId, recordId, fieldnames ) {
+
+      var _buffer = [];
+      var _records = [];
+      var _childFieldNames = [];
 
       // get default values for passed variables if they are undefined
       if ( typeof objectId === 'undefined' ) {
@@ -150,14 +149,14 @@ $( document ).on( resume.eventTrigger, resume.render );
       // Get the field names for the object's fields if not provided
       // this saves pummeling the Knack API more than necessary
       if ( typeof fieldnames === 'undefined' ) {
-          fieldnames = _getFields(objectId);
+        fieldnames = this.getFields(objectId);
       } 
 
       // get the specific data for the record fields
       $.getJSON(
         'https://api.knackhq.com/v1/objects/' + objectId + '/records/' + recordId,
         function(response) {
-          _record = response;
+          _records = response;
         }
       );
 
@@ -169,13 +168,13 @@ $( document ).on( resume.eventTrigger, resume.render );
         //if this field is a connection (relational)
         if ( fieldnames[x].type === 'connection' ) {
 
-          _childFieldNames = _getFields( fieldnames[x].relationship.object );
+          _childFieldNames = this.getFields( fieldnames[x].relationship.object );
 
           // loop through each connection's records and get the "raw" data
           // their naming convention looks like this "field_21_raw"
           _buffer[x].connection = _record[ fieldname[x].key +'_raw' ]
             .forEach(
-              function( child, index ) {
+              function( child ) {
                 return {
                   'id'         : child.id,
                   'identifier' : child.identifier,
@@ -201,7 +200,7 @@ $( document ).on( resume.eventTrigger, resume.render );
         typeof fieldnames === 'undefined'
       ) {
         console.log( 'Knack Object:' );
-        console.log( buffer );
+        console.log( _buffer );
       }
       return _buffer;
     },
