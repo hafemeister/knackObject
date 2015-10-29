@@ -183,7 +183,7 @@ $( document ).on( resume.eventTrigger, resume.render );
               _buffer[x].connection[index].id         = record.id;
               _buffer[x].connection[index].identifier = record.identifier;
               _buffer[x].connection[index].records    = this.get( 
-                  _fieldnames[x].relationship.object, 
+                  _fieldNames[x].relationship.object, 
                   record.id, 
                   _childFieldNames
               );
