@@ -118,7 +118,8 @@ $( document ).on( resume.eventTrigger, resume.render );
               this
             );
           } 
-        );
+        ).bind(this);
+        
         return _fields;
       },
 
