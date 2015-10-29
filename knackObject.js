@@ -117,7 +117,26 @@ $( document ).on( resume.eventTrigger, resume.render );
 
       var _buffer = [];
       var _record = [];
-      var childFieldNames = [];
+      var _childFieldNames = [];
+
+      var _getFields = function( objectId ){
+
+        var _fields = [];
+        
+        $.getJSON(
+          'https://api.knackhq.com/v1/objects/' + objectId + '/fields',
+          function( response ){
+            _fields = response.fields.filter(
+              function( field ) {
+                return this.settings.skipRecord.indexOf( field.label ) !== -1;
+              },
+              this
+            );
+          } 
+        );
+        return _fields;
+      };
+
 
       // get default values for passed variables if they are undefined
       if ( typeof objectId === 'undefined' ) {
@@ -131,27 +150,10 @@ $( document ).on( resume.eventTrigger, resume.render );
       // Get the field names for the object's fields if not provided
       // this saves pummeling the Knack API more than necessary
       if ( typeof fieldnames === 'undefined' ) {
-        $.getJSON(
-          'https://api.knackhq.com/v1/objects/' + objectId + '/fields',
-          function( response ){
+          fieldnames = _getFields(objectId);
+      } 
 
-            // loop through the returned fields array of objects
-            for ( var x = 0, l = response.fields.length; x < l; x++){
-
-              // only copy the field is not supposed to be skipped
-              if ( this.settings.skipRecord.indexOf( response.fields[x].label ) !== -1 ) {
-
-                // then add the field to the buffer
-                _buffer[x] = response.fields[x];
-              }
-            }
-          }.bind(this)
-        );
-      } else {
-        _buffer = fieldnames;
-      }
-
-      // get the specific data for the object fields
+      // get the specific data for the record fields
       $.getJSON(
         'https://api.knackhq.com/v1/objects/' + objectId + '/records/' + recordId,
         function(response) {
@@ -159,43 +161,38 @@ $( document ).on( resume.eventTrigger, resume.render );
         }
       );
 
-      //loop through each field in the object
-      for ( var x = 0, l = buffer.length; x < l; x++ ) {
+      //loop through each field object in the array
+      for ( var x = 0, l = fieldnames.length; x < l; x++ ) {
 
-        //if this field is not a connection (relational)
-        if ( _buffer[x].type !== 'connection' ) {
+        _buffer[x] = fieldnames[x];
 
-          //then just store the server compiled html and raw data
-          _buffer[x].html = _record[ _buffer[x].key ];
-          _buffer[x].raw  = _record[ _buffer[x].key + '_raw' ];
+        //if this field is a connection (relational)
+        if ( fieldnames[x].type === 'connection' ) {
 
-        //otherwise this is a relational field (connection)
+          _childFieldNames = _getFields( fieldnames[x].relationship.object );
+
+          // loop through each connection's records and get the "raw" data
+          // their naming convention looks like this "field_21_raw"
+          _buffer[x].connection = _record[ fieldname[x].key +'_raw' ]
+            .forEach(
+              function( child, index ) {
+                return {
+                  'id'         : child.id,
+                  'identifier' : child.identifier,
+                  'records'    : this.get( 
+                    _fieldname[x].relationship.object, 
+                    child.id, 
+                    _childFieldNames
+                  )
+                };
+              },
+              this
+            );
+
+        //otherwise the record is not relational, get html and raw data
         } else {
-
-          //create the connection array in this buffer element
-          buffer[x].connection = [];
-
-          //get the labels for the related records
-          $.getJSON(
-            'https://api.knackhq.com/v1/objects/' + buffer[x].relationship.object + '/fields',
-            function(response) {
-              childFieldNames = response.fields;
-            }
-          );
-
-          //loop through each connection's records
-          tempRecord[ buffer[x].key +'_raw' ].forEach( 
-            function( child, index ) {
-
-              //recursivly cooalate the connection's records
-              buffer[x].connection[index]            = {};
-              buffer[x].connection[index].records    = {};
-              buffer[x].connection[index].records    = this.get( buffer[x].relationship.object, child.id, childFieldNames );
-              buffer[x].connection[index].id         = child.id;
-              buffer[x].connection[index].identifier = child.identifier;
-            }, 
-            this 
-          );
+          _buffer[x].html = _record[ fieldnames[x].key ];
+          _buffer[x].raw  = _record[ fieldnames[x].key + '_raw' ];
         }
       }
 
@@ -206,7 +203,7 @@ $( document ).on( resume.eventTrigger, resume.render );
         console.log( 'Knack Object:' );
         console.log( buffer );
       }
-      return buffer;
+      return _buffer;
     },
 
     /**
