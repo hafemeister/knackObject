@@ -114,7 +114,7 @@ $( document ).on( resume.eventTrigger, resume.render );
           function( response ){
             _fields = response.fields.filter(
               function( field ) {
-                return _this.settings.skipRecord.indexOf( field.label ) !== -1;
+                return _this.settings.skipRecord.indexOf( field.label ) === -1;
               },
               this
             );
@@ -232,10 +232,9 @@ $( document ).on( resume.eventTrigger, resume.render );
       // if there are 3 connection and they are labeled "Identifier", "Title" and "Details"
       // then render
         if (
-          objects.connection.length   === 3 &&
-          objects.connection[0].label === 'Identifier' &&
-          objects.connection[1].label === 'Title' &&
-          objects.connection[2].label === 'Detail'
+          objects.connection.length   === 2 &&
+          objects.connection[0].label === 'Title' &&
+          objects.connection[0].label === 'Detail'
         ) {
           _buffer += '<div class="knackObjectLabel">' + objects.connection[1].html + '</div>' +
             '<div class="knackObjectDetails">' + objects.connection[1].html + '</div>';
