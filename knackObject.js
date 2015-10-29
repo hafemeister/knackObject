@@ -177,7 +177,7 @@ $( document ).on( resume.eventTrigger, resume.render );
                   'id'         : record.id,
                   'identifier' : record.identifier,
                   'records'    : this.get( 
-                    _fieldnames[x].relationship.object, 
+                    fieldnames[x].relationship.object, 
                     record.id, 
                     _childFieldNames
                   )
