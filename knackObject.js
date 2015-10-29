@@ -170,6 +170,7 @@ $( document ).on( resume.eventTrigger, resume.render );
 
           // loop through each connection's records and get the "raw" data
           // their naming convention looks like this "field_21_raw"
+          _buffer[x].connection = [];
           _buffer[x].connection = _records[ fieldnames[x].key +'_raw' ]
             .forEach(
               function( record ) {
