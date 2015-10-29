@@ -171,6 +171,8 @@ $( document ).on( resume.eventTrigger, resume.render );
 
           _childFieldNames = this.getFields( _fieldNames[x].relationship.object );
 
+          _buffer[x].connection = [];
+
           // loop through each connection's records and get the "raw" data
           // their naming convention looks like this "field_21_raw"
             _records[ _fieldNames[x].key +'_raw' ].forEach( function( record, index ) {
