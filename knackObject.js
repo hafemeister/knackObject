@@ -173,7 +173,8 @@ $( document ).on( resume.eventTrigger, resume.render );
           _buffer[x].connection = _records[ fieldnames[x].key +'_raw' ]
             .forEach(
               function( record ) {
-                return {
+
+                var _temp = {
                   'id'         : record.id,
                   'identifier' : record.identifier,
                   'records'    : this.get( 
@@ -182,6 +183,7 @@ $( document ).on( resume.eventTrigger, resume.render );
                     _childFieldNames
                   )
                 };
+                return  _temp;
               },
               this
             );
