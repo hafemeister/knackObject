@@ -107,19 +107,20 @@ $( document ).on( resume.eventTrigger, resume.render );
     getFields : function( objectId ){
 
         var _fields = [];
+        var _this = this;
         
         $.getJSON(
           'https://api.knackhq.com/v1/objects/' + objectId + '/fields',
           function( response ){
             _fields = response.fields.filter(
               function( field ) {
-                return this.settings.skipRecord.indexOf( field.label ) !== -1;
+                return _this.settings.skipRecord.indexOf( field.label ) !== -1;
               },
               this
             );
           } 
         ).bind(this);
-        
+
         return _fields;
       },
 
