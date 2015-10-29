@@ -174,15 +174,15 @@ $( document ).on( resume.eventTrigger, resume.render );
 
           // loop through each connection's records and get the "raw" data
           // their naming convention looks like this "field_21_raw"
-          _buffer[x].connection = _record[ fieldname[x].key +'_raw' ]
+          _buffer[x].connection = _records[ fieldname[x].key +'_raw' ]
             .forEach(
-              function( child ) {
+              function( record ) {
                 return {
-                  'id'         : child.id,
-                  'identifier' : child.identifier,
+                  'id'         : record.id,
+                  'identifier' : record.identifier,
                   'records'    : this.get( 
                     _fieldname[x].relationship.object, 
-                    child.id, 
+                    record.id, 
                     _childFieldNames
                   )
                 };
@@ -192,8 +192,8 @@ $( document ).on( resume.eventTrigger, resume.render );
 
         //otherwise the record is not relational, get html and raw data
         } else {
-          _buffer[x].html = _record[ fieldnames[x].key ];
-          _buffer[x].raw  = _record[ fieldnames[x].key + '_raw' ];
+          _buffer[x].html = _records[ fieldnames[x].key ];
+          _buffer[x].raw  = _records[ fieldnames[x].key + '_raw' ];
         }
       }
 
