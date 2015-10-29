@@ -112,14 +112,10 @@ $( document ).on( resume.eventTrigger, resume.render );
         $.getJSON(
           'https://api.knackhq.com/v1/objects/' + objectId + '/fields',
           function( response ){
-            _fields = response.fields.filter(
-              function( field ) {
-                return _this.settings.skipRecord.indexOf( field.label ) === -1;
-              },
-              this
-            );
-          } 
-        );
+            _fields = response.fields.filter( function( field ) {
+              return _this.settings.skipRecord.indexOf( field.label ) === -1;
+            } );
+        } );
 
         return _fields;
       },
