@@ -46,9 +46,9 @@
     } );
 
     if ( this.settings.renderNow === true ) {
-      this.settings.showSpinner.call();
+      //this.settings.showSpinner.call();
       this.render();
-      this.settings.hideSpinner.call();
+      //this.settings.hideSpinner.call();
     }
   };
 
@@ -87,10 +87,10 @@
       'templateValue' : 'Details',
 
       /* javascript to show a throbber while function runs */
-      //'showSpinner' : function() {Knack.showSpinner();},
+      'showSpinner' : function() {Knack.showSpinner();},
 
       /* javascript to hide a throbber once function finishes */
-      //'hideSpinner'  : function() {Knack.hideSpinner();},
+      'hideSpinner'  : function() {Knack.hideSpinner();},
     },
 
     /**
