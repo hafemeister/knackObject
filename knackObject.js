@@ -264,15 +264,15 @@
             objects.connections[0].label === 'Title' &&
             objects.connections[1].label === 'Detail'
           ) {
-            _buffer += '<div class="knackObjectLabel">' + objects.connections[0].html + '</div>' +
-              '<div class="knackObjectDetails">' + objects.connections[1].html + '</div>';
+            _buffer += '<div class="kn-label">' + objects.connections[0].html + '</div>' +
+              '<div class="kn-value">' + objects.connections[1].html + '</div>';
 
           // otherwise recurse through array of relational connection or records arrays
           } else {
 
             // create header based on level of relationship,
-            if ( recursionLevel == 0 ) {
-              _buffer += '<h3>' + objects.label + '</h3>';
+            if ( recursionLevel === 0 ) {
+              _buffer += '<h2>' + objects.label + '</h2>';
             }
 
             // and recurse through objects connection
@@ -297,8 +297,8 @@
 
           var temp2 = objects.label;
           var temp3 = objects.html;
-          var temp4 =  '<div>' + temp2 + '</div>';
-          var temp5 =  '<div>' + temp3 + '</div>';
+          var temp4 =  '<div class="kn-label">' + temp2 + '</div>';
+          var temp5 =  '<div class="kn-value">' + temp3 + '</div>';
 
 
           _buffer += temp4 + temp5;
@@ -310,7 +310,7 @@
 
       if ( 
         this.settings.debug === true &&
-        recursionLevel == 0
+        recursionLevel === 0
       ) {
         console.log( 'KnackObject HTML Template' );
         console.log( _buffer );
