@@ -249,17 +249,17 @@
       // if there are 3 connection and they are labeled "Identifier", "Title" and "Details"
       // then render
         if (
-          objects.connection.length   === 2 &&
-          objects.connection[0].label === 'Title' &&
-          objects.connection[1].label === 'Detail'
+          objects.connections.length   === 2 &&
+          objects.connections[0].label === 'Title' &&
+          objects.connections[1].label === 'Detail'
         ) {
-          _buffer += '<div class="knackObjectLabel">' + objects.connection[0].html + '</div>' +
-            '<div class="knackObjectDetails">' + objects.connection[1].html + '</div>';
+          _buffer += '<div class="knackObjectLabel">' + objects.connections[0].html + '</div>' +
+            '<div class="knackObjectDetails">' + objects.connections[1].html + '</div>';
 
         // otherwise recurse through array of relational connection or records arrays
         } else {
-          for ( x = 0, l = objects.connection.length; x < l; x++ ) {
-              _buffer += this.template( objects.connection[x], level );
+          for ( x = 0, l = objects.connections.length; x < l; x++ ) {
+              _buffer += this.template( objects.connections[x], level );
           }
         }
 
