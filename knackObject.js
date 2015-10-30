@@ -245,7 +245,7 @@
       if ( Array.isArray( objects ) ) {
 
         for ( x = 0, l = objects.length; x < l; x++ ) {
-            _buffer += this.template( objects[x], level );
+            _buffer += this.template( objects[x], recursionLevel );
         }
 
       // otherwise if the objects is an... object,
@@ -276,7 +276,7 @@
               _buffer += template( objects.connections[x], 1 );
             }
           }
-          
+
         // otherwise, check if the objects variable has a "records" array of objets
         // if it does, then we are inside a relational child
         // so recurse through the array of records
@@ -296,6 +296,14 @@
           // @todo proper error
           console.log('Knack Object: unexpected error');
         }
+      }
+
+      if ( 
+        this.settings.debug === true &&
+        typeof recursionLevel === 'undefined'
+      ) {
+        log.console( 'KnackObject HTML Template' );
+        log.console( _buffer );
       }
       return _buffer;
     },
