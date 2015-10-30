@@ -80,17 +80,17 @@
       /* the element ID to render object into */
       'elementId' : '',
 
-      /* when rendering the object to HTML, skip any record with a label in this array */
-      'templateSkipRecord' : [],
-
       /* when getting the records from the server, skip any record with a label in this array */
-      'skipRecord'      : [],
+      'skipRecord'    : [],
+
+      'templateKey'   : 'Title',
+      'templateValue' : 'Details',
 
       /* javascript to show a throbber while function runs */
-      'showSpinner' : function() {Knack.showSpinner();},
+      //'showSpinner' : function() {Knack.showSpinner();},
 
       /* javascript to hide a throbber once function finishes */
-      'hideSpinner'  : function() {Knack.hideSpinner();},
+      //'hideSpinner'  : function() {Knack.hideSpinner();},
     },
 
     /**
@@ -278,14 +278,29 @@
         } else if ( typeof objects.records !== 'undefined' ) {
           
           //check for special case
-          if (
-            objects.records.length   === 2 &&
-            objects.records[0].label === 'Title' &&
-            objects.records[1].label === 'Details'
-          ) {
-            _buffer += '<div class="kn-label">' + objects.records[0].html + '</div>' +
-              '<div class="kn-value">' + objects.records[1].html + '</div>';
+          if ( this.settings.templateValue ) {
+          
+            if (
+              objects.records.length   === 2 &&
+              objects.records[1].label === this.settings.templateValue
+            ) {
+              _buffer += '<div class="kn-value">' + objects.records[1].html + '</div>';
 
+            } else if (
+              objects.records.length   === 1 &&
+              objects.records[0].label === this.settings.templateValue
+            ) {
+              _buffer += '<div class="kn-value">' + objects.records[0].html + '</div>';
+            }
+
+            if ( this.settings.templateKey ) {
+              if (
+                objects.records.length   === 2 &&
+                objects.records[0].label === this.settings.templateKey
+              ) {
+                _buffer += '<div class="kn-label">' + objects.records[0].html + '</div>';
+              }
+            }
           // otherwise recurse through array of relational connection or records arrays
           } else {
             for ( x = 0, l=  objects.records.length; x < l; x++ ) {
