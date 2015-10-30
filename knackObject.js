@@ -3,19 +3,6 @@
 /**
  * crawls through a knack object by making the dirty API queries to mimic full relational queru responces.
  * @param {object} options [ see prototype defaults for description ]
- * @example
- * ,,,javascript
- * var resume = new KnackObject({
-    'debug'              : true,
-    'appId'              : '562c434ff0d6ccc53cd77925',
-    'apiKey'             : '652e2800-7d44-11e5-90be-45cb5dc27cc2',
-    'objectId'           : 'object_8',
-    'recordId'           : document.URL.split('#view/')[1],
-    'viewId'             : 'scene_67',
-    'templateSkipRecord' : 'identifier',
-});
-
-$( document ).on( resume.eventTrigger, resume.render );
  */
 
 ( function( window, $, undefined ) {
@@ -25,9 +12,9 @@ $( document ).on( resume.eventTrigger, resume.render );
 
     /**
      * creates a new object, based on the defaults extended by options.
-     * @param  {object} defaults [ see prototype.defaults for descriptions ]
+     * @param  {object}           defaults [ see prototype.defaults for descriptions ]
      * @param  {object|undefined} options  [ see examples ]
-     * @return {object}          the defaults extended by options.
+     * @return {object}           the defaults extended by options.
      */
     function extend ( defaults, options ) {
       var extended = Object.create( defaults );
@@ -104,11 +91,17 @@ $( document ).on( resume.eventTrigger, resume.render );
       'hideSpinner'  : function() {Knack.hideSpinner();},
     },
 
+    /**
+     * gets the fields (labels) of a knack API object
+     * @requires  JQuery
+     * @param     {string} objectId the ID string of the knack API object @example 'object_2'
+     * @return    {array}           array of field description objects
+     */
     getFields : function( objectId ){
 
         var _fields = [];
         var _this = this;
-        
+
         $.getJSON(
           'https://api.knackhq.com/v1/objects/' + objectId + '/fields',
           function( response ){
@@ -121,28 +114,51 @@ $( document ).on( resume.eventTrigger, resume.render );
       },
 
     /**
+     * gets a specific record from the knack API
+     * @requires JQuery
+     * @param    {string} recordId the record ID to get data for   @example 'aeei4858D38rgjr3'
+     * @param    {string} objectId the name of the object to query @example 'object_2'
+     * @return   {array}           an array of knackAPI record objects
+     */
+    getRecord : function ( recordId, objectId ) {
+
+      var _record= [];
+
+      // get the specific data for the record fields
+      $.getJSON(
+        'https://api.knackhq.com/v1/objects/' + objectId + '/records/' + recordId,
+        function( response ) {
+          _record = response;
+        }
+      );
+
+      return _record;
+
+    },
+
+    /**
        * recursivly coalates a knack object to show the field labels and the records
        * if the record data is a connection (relation), then coalate its data too
-       * @requires  JQuery
        * @param  {string|undefined} objectId   @optional the identifier of the knack object to query
        * @param  {string|undefined} recordId   @optional the identifier of the record in the object to query
-       * @param  {object|undefined} fieldnames @optional precomputing the fieldnames saves ajax requests
+       * @param  {object|undefined} fieldnames @optional precomputing the fieldnames during recursion saves ajax requests
        * @return {object}                      the coalated object
        */
-    get : function ( objectId, recordId, fieldnames ) {
+    get : function ( recordId, objectId, fieldnames ) {
 
       var _buffer = [];
       var _records = [];
       var _fieldNames = [];
       var _childFieldNames = [];
 
-      // get default values for passed variables if they are undefined
-      if ( typeof objectId === 'undefined' ) {
-        objectId = this.settings.objectId;
-      }
 
       if ( typeof recordId === 'undefined') {
         recordId = this.settings.recordId;
+      }
+
+      // get default values for passed variables if they are undefined
+      if ( typeof objectId === 'undefined' ) {
+        objectId = this.settings.objectId;
       }
 
       // Get the field names for the object's fields if not provided
@@ -153,13 +169,7 @@ $( document ).on( resume.eventTrigger, resume.render );
         _fieldNames = fieldnames;
       }
 
-      // get the specific data for the record fields
-      $.getJSON(
-        'https://api.knackhq.com/v1/objects/' + objectId + '/records/' + recordId,
-        function( response ) {
-          _records = response;
-        }
-      );
+      _records = this.getRecord( recordId, objectId );
 
       //loop through each field object in the array
       for ( var x = 0, l = _fieldNames.length; x < l; x++ ) {
@@ -171,20 +181,20 @@ $( document ).on( resume.eventTrigger, resume.render );
 
           _childFieldNames = this.getFields( _fieldNames[x].relationship.object );
 
-          _buffer[x].connection = [];
+          _buffer[x].connections = [];
 
           // loop through each connection's records and get the "raw" data
           // their naming convention looks like this "field_21_raw"
             _records[ _fieldNames[x].key +'_raw' ].forEach( function( record, index ) {
 
               //recursivly cooalate the connection's records
-              _buffer[x].connection[index]            = {};
-              _buffer[x].connection[index].records    = [];
-              _buffer[x].connection[index].id         = record.id;
-              _buffer[x].connection[index].identifier = record.identifier;
-              _buffer[x].connection[index].records    = this.get( 
-                  _fieldNames[x].relationship.object, 
-                  record.id, 
+              _buffer[x].connections[index]            = {};
+              _buffer[x].connections[index].records    = [];
+              _buffer[x].connections[index].id         = record.id;
+              _buffer[x].connections[index].identifier = record.identifier;
+              _buffer[x].connections[index].records    = this.get(
+                  _fieldNames[x].relationship.object,
+                  record.id,
                   _childFieldNames
               );
 
@@ -197,8 +207,8 @@ $( document ).on( resume.eventTrigger, resume.render );
         }
       }
 
-      if ( 
-        this.settings.debug && 
+      if (
+        this.settings.debug &&
         typeof fieldnames === 'undefined'
       ) {
         console.log( 'Knack Object:' );
@@ -209,9 +219,9 @@ $( document ).on( resume.eventTrigger, resume.render );
 
     /**
      * recursively creates a string of HTML that represents the Knack object
-     * @param  {array|object}          objects  array of knack objects
-     * @param  {boolean|undefined}     level    @optional set to true if recursing
-     * @return {string}                         HTML representing Knack object
+     * @param  {array|object|string}    objects  @optional array of knack objects
+     * @param  {boolean|undefined}      level    @optional set to true if recursing
+     * @return {string}                          HTML representing Knack object
      */
     template : function ( objects, recursionLevel ) {
 
@@ -223,9 +233,16 @@ $( document ).on( resume.eventTrigger, resume.render );
       // get coallated object if object not passed as variable
       if ( typeof objects === 'undefined') {
         objects = this.get();
-      } 
 
-      // if objects is an array of objects,
+      // if objects is a string, then assume its a record ID 
+      // get the knack object for that record id
+      // assume the settings.objectID is set
+      } else if ( typeof objects === 'string' ) {
+        objects = this.get(objects);
+      }
+
+      // if objects is an array of objects, 
+      // assume it is a KnackObject
       if ( objects.isArray ) {
 
       // check for a special case
@@ -250,7 +267,7 @@ $( document ).on( resume.eventTrigger, resume.render );
           }
         }
 
-      // otherwise if the objects variable is an object,
+      // otherwise if the objects is an... object,
 
       // check if objects variable is relational,(links to other objects)
       } else if ( objects.type === 'connection' ) {
@@ -261,8 +278,8 @@ $( document ).on( resume.eventTrigger, resume.render );
         }
 
         // and recurse through objects connection
-        for ( x = 0, l=  objects.connection.length; x < l; x++ ) {
-          _buffer += template( objects.connection[x], 1 );
+        for ( x = 0, l=  objects.connections.length; x < l; x++ ) {
+          _buffer += template( objects.connections[x], 1 );
         }
 
       // otherwise, check if the objects variable has a "records" key
@@ -283,18 +300,24 @@ $( document ).on( resume.eventTrigger, resume.render );
 
     /**
      * renders an html string into a Knack view
-     *
-     * @param  {string}            htmlString ...erm, this is a string of HTML
-     * @param  {string|undefined}  elementId   @optional the HTML element ID to append the HTML to
-     *                                         if no elementID is passed, then append an
-     *                                         appropriatly wrapped element into the Knack view
-     * @return {undefined}         
+     * @requires  JQuery
+     * @param     {string|array}      html       @optional if array, turn into string, if empty template and render defaults
+     * @param     {string|undefined}  elementId  @optional the HTML element ID to append the HTML to
+     *                                           if no elementID is passed, then append an
+     *                                           appropriatly wrapped element into the Knack view
+     * @return    {undefined}
      */
-    render : function ( htmlString, elementId ) {
+    render : function ( html, elementId ) {
       var $element = {};
 
-      if ( typeof htmlString === 'undefined') {
+      if ( typeof html === 'undefined' ) {
         htmlString = this.template();
+      } else if ( html.isArray ) {
+        htmlString = this.template( html );
+      } else if ( typeof html === 'string' ) {
+        htmlString = html;
+      } else {
+        console.log('unexpected type');
       }
 
       if ( typeof elementId === 'undefined' ) {
@@ -310,8 +333,11 @@ $( document ).on( resume.eventTrigger, resume.render );
       }
     },
 
-    eventTrigger : function () {
-      return 'knack-page-render.'+ this.settings. viewId;
+    eventTrigger : function ( viewId ) {
+      if ( typeof viewId === 'undefined') {
+        viewId = this.settings.viewId;
+      }
+      return 'knack-page-render.'+ viewId;
     }
   };
 }( window, window.Knack.$ ) );
