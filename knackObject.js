@@ -241,55 +241,61 @@
         objects = this.get(objects);
       }
 
-      // if objects is an array of objects, 
-      // assume it is a KnackObject
+      // if objects is an array of objects, loop through them
       if ( Array.isArray( objects ) ) {
 
-      // check for a special case
-      // if there are 3 connection and they are labeled "Identifier", "Title" and "Details"
-      // then render
-        if (
-          objects.connections.length   === 2 &&
-          objects.connections[0].label === 'Title' &&
-          objects.connections[1].label === 'Detail'
-        ) {
-          _buffer += '<div class="knackObjectLabel">' + objects.connections[0].html + '</div>' +
-            '<div class="knackObjectDetails">' + objects.connections[1].html + '</div>';
-
-        // otherwise recurse through array of relational connection or records arrays
-        } else {
-          for ( x = 0, l = objects.connections.length; x < l; x++ ) {
-              _buffer += this.template( objects.connections[x], level );
-          }
+        for ( x = 0, l = objects.length; x < l; x++ ) {
+            _buffer += this.template( objects[x], level );
         }
 
       // otherwise if the objects is an... object,
-
       // check if objects variable is relational,(links to other objects)
-      } else if ( objects.type === 'connection' ) {
-
-        // create header based on level of relationship,
-        if ( typeof recursionLevel === 'undefined' ) {
-          _buffer += '<h3>' + objects.label + '</h3>';
-        }
-
-        // and recurse through objects connection
-        for ( x = 0, l=  objects.connections.length; x < l; x++ ) {
-          _buffer += template( objects.connections[x], 1 );
-        }
-
-      // otherwise, check if the objects variable has a "records" array of objets
-      // if it does, then we are inside a relational child
-      // so recurse through the array of records
-      } else if ( typeof objects.records !== 'undefined' ) {
-          for ( x = 0, l=  objects.records.length; x < l; x++ ) {
-          _buffer += template( objects.records[x], 1 );
-        }
-
-      // otherwise objects is not relational, add ojects' label and html details to template
+      // @todo add object test
       } else {
-        _buffer += '<div><span class="knackObjectLabel">' + objects.label + '</span>' +
-        '<span class="knackObjectDetails'> + objects.html + '</span></div>';
+        if( objects.type === 'connection' ) {
+
+          //check for special case
+          if (
+            objects.connections.length   === 2 &&
+            objects.connections[0].label === 'Title' &&
+            objects.connections[1].label === 'Detail'
+          ) {
+            _buffer += '<div class="knackObjectLabel">' + objects.connections[0].html + '</div>' +
+              '<div class="knackObjectDetails">' + objects.connections[1].html + '</div>';
+
+          // otherwise recurse through array of relational connection or records arrays
+          } else {
+
+            // create header based on level of relationship,
+            if ( typeof recursionLevel === 'undefined' ) {
+              _buffer += '<h3>' + objects.label + '</h3>';
+            }
+
+            // and recurse through objects connection
+            for ( x = 0, l=  objects.connections.length; x < l; x++ ) {
+              _buffer += template( objects.connections[x], 1 );
+            }
+          }
+          
+        // otherwise, check if the objects variable has a "records" array of objets
+        // if it does, then we are inside a relational child
+        // so recurse through the array of records
+        } else if ( typeof objects.records !== 'undefined' ) {
+          for ( x = 0, l=  objects.records.length; x < l; x++ ) {
+            _buffer += template( objects.records[x], 1 );
+          }
+
+        // otherwise objects is not relational, add ojects' label and html details to template
+        } else if (
+          typeof objects.label !== 'undefined' &&
+          typeof objects.label !== 'undefined'
+        ) {
+          _buffer += '<div><span class="knackObjectLabel">' + objects.label + '</span>' +
+            '<span class="knackObjectDetails'> + objects.html + '</span></div>';
+        } else {
+          // @todo proper error
+          console.log('Knack Object: unexpected error');
+        }
       }
       return _buffer;
     },
