@@ -273,7 +273,7 @@
 
             // and recurse through objects connection
             for ( x = 0, l=  objects.connections.length; x < l; x++ ) {
-              _buffer += template( objects.connections[x], 1 );
+              _buffer += this.template( objects.connections[x], 1 );
             }
           }
 
@@ -282,7 +282,7 @@
         // so recurse through the array of records
         } else if ( typeof objects.records !== 'undefined' ) {
           for ( x = 0, l=  objects.records.length; x < l; x++ ) {
-            _buffer += template( objects.records[x], 1 );
+            _buffer += this.template( objects.records[x], 1 );
           }
 
         // otherwise objects is not relational, add ojects' label and html details to template
