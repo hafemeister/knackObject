@@ -255,7 +255,7 @@
       if ( Array.isArray( objects ) ) {
 
         for ( x = 0, l = objects.length; x < l; x++ ) {
-            _buffer += this.template( objects[x], recursionLevel );
+            _buffer += this.template( objects[x], 1 );
         }
 
       // otherwise if the objects is an... object,
@@ -276,7 +276,7 @@
 
             // and recurse through objects connection
             for ( x = 0, l=  objects.connections.length; x < l; x++ ) {
-              _buffer += this.template( objects.connections[x], 1 );
+              _buffer += this.template( objects.connections[x], 2 );
             }
 
             if ( recursionLevel === 0 ) {
@@ -352,6 +352,15 @@
         console.log( 'KnackObject HTML Template' );
         console.log( _buffer );
       }
+
+      if ( recursionLevel === 0 ) {
+        _buffer = '<div class="' + this.settings.templateWrapperClass + '">' + _buffer + '</div>';
+        if ( this.settings.debug === true ) {
+          console.log( 'KnackObject HTML Template' );
+          console.log( _buffer );
+        }
+      }
+      
       return _buffer;
     },
 
