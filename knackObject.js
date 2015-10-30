@@ -292,7 +292,7 @@
             objects.records.length   === 1 &&
             objects.records[0].label === this.settings.templateValue
           ) {
-            buffer += '<div class="kn-value">' + objects.records[0].html + '</div>';
+            _buffer += '<div class="kn-value">' + objects.records[0].html + '</div>';
 
           // otherwise recurse through array of relational connection or records arrays
           } else {
