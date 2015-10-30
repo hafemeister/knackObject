@@ -298,7 +298,7 @@
             objects.records[1].label === this.settings.templateValue
           ) {
             _buffer +=
-              '<div class="' + this.settings.templateDetailsClass + '">' +
+              '<div class="' + this.settings.templateRecordClass + '">' +
                 '<div class="' + this.settings.templateKeyClass + '">' +
                   objects.records[0].html +
                 '</div>' +
@@ -313,7 +313,7 @@
             objects.records[0].label === this.settings.templateValue
           ) {
             _buffer +=
-              '<div class="' + this.settings.templateDetailsClass + '">' +
+              '<div class="' + this.settings.templateRecordClass + '">' +
                 '<div class="' + this.settings.templateValueClass + '">' +
                   objects.records[0].html +
                 '</div>' +
@@ -338,7 +338,7 @@
           var temp5 =  '<span class="' + this.settings.templateValueClass + '">' + temp3 + '</span>';
 
 
-          _buffer += '<div class="' + this.settings.templateDetailsClass + '">' + temp4 + temp5 + '</div>';
+          _buffer += '<div class="' + this.settings.templateRecordClass + '">' + temp4 + temp5 + '</div>';
         } else {
           // @todo proper error
           console.log('Knack Object: unexpected error');
@@ -360,7 +360,7 @@
           console.log( _buffer );
         }
       }
-      
+
       return _buffer;
     },
 
