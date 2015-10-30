@@ -298,10 +298,11 @@
           var temp = typeof objects.label;
           var temp2 = objects.label;
           var temp3 = objects.html;
-          var temp4 =  temp2 + temp3;
+          var temp4 =  '<div>' + temp2 + '</div>';
+          var temp5 =  '<div>' + temp3 + '</div>';
 
 
-          _buffer += temp3;
+          _buffer += temp4 + temp5;
         } else {
           // @todo proper error
           console.log('Knack Object: unexpected error');
