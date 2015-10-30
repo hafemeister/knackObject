@@ -83,8 +83,8 @@
       /* when getting the records from the server, skip any record with a label in this array */
       'skipRecord'    : [],
 
-      'templateKey'   : 'Title',
-      'templateValue' : 'Details',
+      'templateKey'   : '',
+      'templateValue' : '',
 
       /* javascript to show a throbber while function runs */
       'showSpinner' : function() {Knack.showSpinner();},
