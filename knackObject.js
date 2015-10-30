@@ -193,8 +193,8 @@
               _buffer[x].connections[index].id         = record.id;
               _buffer[x].connections[index].identifier = record.identifier;
               _buffer[x].connections[index].records    = this.get(
-                  _fieldNames[x].relationship.object,
                   record.id,
+                  _fieldNames[x].relationship.object,
                   _childFieldNames
               );
 
@@ -241,6 +241,10 @@
         objects = this.get(objects);
       }
 
+      if ( typeof recursionLevel === 'undefined' ) {
+        recursionLevel =0;
+      }
+
       // if objects is an array of objects, loop through them
       if ( Array.isArray( objects ) ) {
 
@@ -267,7 +271,7 @@
           } else {
 
             // create header based on level of relationship,
-            if ( typeof recursionLevel === 'undefined' ) {
+            if ( typeof recursionLevel === 1 ) {
               _buffer += '<h3>' + objects.label + '</h3>';
             }
 
@@ -282,13 +286,13 @@
         // so recurse through the array of records
         } else if ( typeof objects.records !== 'undefined' ) {
           for ( x = 0, l=  objects.records.length; x < l; x++ ) {
-            _buffer += this.template( objects.records[x], 1 );
+            _buffer += this.template( objects.records[x], 2 );
           }
 
         // otherwise objects is not relational, add ojects' label and html details to template
         } else if (
           typeof objects.label !== 'undefined' &&
-          typeof objects.label !== 'undefined'
+          typeof objects.html  !== 'undefined'
         ) {
           _buffer += '<div><span class="knackObjectLabel">' + objects.label + '</span>' +
             '<span class="knackObjectDetails'> + objects.html + '</span></div>';
