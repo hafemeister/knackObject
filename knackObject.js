@@ -271,7 +271,7 @@
           } else {
 
             // create header based on level of relationship,
-            if ( recursionLevel == 1 ) {
+            if ( recursionLevel == 0 ) {
               _buffer += '<h3>' + objects.label + '</h3>';
             }
 
@@ -295,7 +295,6 @@
           typeof objects.html  !== 'undefined'
         ) {
 
-          var temp = typeof objects.label;
           var temp2 = objects.label;
           var temp3 = objects.html;
           var temp4 =  '<div>' + temp2 + '</div>';
@@ -311,7 +310,7 @@
 
       if ( 
         this.settings.debug === true &&
-        recursionLevel === 0
+        recursionLevel == 0
       ) {
         console.log( 'KnackObject HTML Template' );
         console.log( _buffer );
