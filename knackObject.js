@@ -42,7 +42,11 @@
       headers : {
         'X-Knack-Application-Id': this.settings.appId,
         'X-Knack-REST-API-Key'  : this.settings.apiKey
-      }
+      },
+      error: error( function(jqXHR, textStatus, errorThrown) {
+        console.log("error " + textStatus);
+        console.log("incoming Text " + jqXHR.responseText);
+      } )
     } );
 
     if ( this.settings.renderNow === true ) {
