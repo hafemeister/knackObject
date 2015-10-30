@@ -219,9 +219,9 @@
 
     /**
      * recursively creates a string of HTML that represents the Knack object
-     * @param  {array|object|string}    objects  @optional array of knack objects
-     * @param  {boolean|undefined}      level    @optional set to true if recursing
-     * @return {string}                          HTML representing Knack object
+     * @param  {Array|Object|string|undefined}    objects  @optional array of knack objects
+     * @param  {boolean|undefined}                level    @optional set to true if recursing
+     * @return {string}                                    HTML representing Knack object
      */
     template : function ( objects, recursionLevel ) {
 
@@ -243,7 +243,7 @@
 
       // if objects is an array of objects, 
       // assume it is a KnackObject
-      if ( objects.isArray ) {
+      if ( Array.isArray( objects ) ) {
 
       // check for a special case
       // if there are 3 connection and they are labeled "Identifier", "Title" and "Details"
@@ -259,11 +259,7 @@
         // otherwise recurse through array of relational connection or records arrays
         } else {
           for ( x = 0, l = objects.length; x < l; x++ ) {
-
-            // only recurse through records not in settings.templateSkipRecord
-            if ( ! ( object[x].label in this.settings.templateSkipRecord ) ) {
               _buffer += this.template( objects[x], level );
-            }
           }
         }
 
@@ -301,7 +297,8 @@
     /**
      * renders an html string into a Knack view
      * @requires  JQuery
-     * @param     {string|array}      html       @optional if array, turn into string, if empty template and render defaults
+     * @param     {string|array}      html       @optional if array, then html is a KnackObject: get string and render, 
+     *                                           if string: render string
      * @param     {string|undefined}  elementId  @optional the HTML element ID to append the HTML to
      *                                           if no elementID is passed, then append an
      *                                           appropriatly wrapped element into the Knack view
@@ -312,7 +309,7 @@
 
       if ( typeof html === 'undefined' ) {
         htmlString = this.template();
-      } else if ( html.isArray ) {
+      } else if ( Array.isArray( html ) ) {
         htmlString = this.template( html );
       } else if ( typeof html === 'string' ) {
         htmlString = html;
