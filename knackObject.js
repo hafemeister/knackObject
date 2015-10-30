@@ -310,7 +310,7 @@
 
       if ( 
         this.settings.debug === true &&
-        typeof recursionLevel === 0
+        recursionLevel === 0
       ) {
         console.log( 'KnackObject HTML Template' );
         console.log( _buffer );
