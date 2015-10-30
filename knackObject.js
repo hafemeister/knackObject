@@ -271,7 +271,7 @@
           } else {
 
             // create header based on level of relationship,
-            if ( typeof recursionLevel === 1 ) {
+            if ( recursionLevel == 1 ) {
               _buffer += '<h3>' + objects.label + '</h3>';
             }
 
