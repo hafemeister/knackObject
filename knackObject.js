@@ -3,7 +3,7 @@
 /**
  * crawls through a knack object by making the dirty API queries to mimic full relational queru responces.
  * @param {object} options [ see prototype defaults for description ]
- * @author Jason O'brien 
+ * @author Jason O'brien
  * @licence MIT license
  */
 
@@ -240,7 +240,7 @@
       if ( typeof objects === 'undefined') {
         objects = this.get();
 
-      // if objects is a string, then assume its a record ID 
+      // if objects is a string, then assume its a record ID
       // get the knack object for that record id
       // assume the settings.objectID is set
       } else if ( typeof objects === 'string' ) {
@@ -267,8 +267,10 @@
 
             // create header based on level of relationship,
             if ( recursionLevel === 0 ) {
-              _buffer += '<'+ this.settings.templateRecordHeader +'>' + 
-                objects.label + 
+              _buffer +=
+              '<div class="'+ this.settings.templateSectionClass +'>' +
+                '<'+ this.settings.templateRecordHeader +'>' +
+                  objects.label +
                 '</'+ this.settings.templateRecordHeader +'>';
             }
 
@@ -276,27 +278,33 @@
             for ( x = 0, l=  objects.connections.length; x < l; x++ ) {
               _buffer += this.template( objects.connections[x], 1 );
             }
-    
+
+            if ( recursionLevel === 0 ) {
+              _buffer += '</div>';
+            }
+
 
         // otherwise, check if the objects variable has a "records" array of objets
         // if it does, then we are inside a relational child
         // so recurse through the array of records
         } else if ( typeof objects.records !== 'undefined' ) {
-          
+
           //check for special case
-          if ( 
+          if (
             this.settings.templateValue &&
             this.settings.templateKey &&
             objects.records.length   === 2 &&
             objects.records[0].label === this.settings.templateKey &&
             objects.records[1].label === this.settings.templateValue
           ) {
-            _buffer += 
-              '<div class="' + this.settings.templateKeyClass + '">' + 
-                objects.records[0].html + 
-              '</div>' +
-              '<div class="' + this.settings.templateValueClass + '">' + 
-                objects.records[1].html + 
+            _buffer +=
+              '<div class="' + this.settings.templateDetailsClass + '">' +
+                '<div class="' + this.settings.templateKeyClass + '">' +
+                  objects.records[0].html +
+                '</div>' +
+                '<div class="' + this.settings.templateValueClass + '">' +
+                  objects.records[1].html +
+                '</div>' +
               '</div>';
 
           } else if (
@@ -304,9 +312,11 @@
             objects.records.length   === 1 &&
             objects.records[0].label === this.settings.templateValue
           ) {
-            _buffer += 
-              '<div class="' + this.settings.templateValueClass + '">' + 
-                objects.records[0].html + 
+            _buffer +=
+              '<div class="' + this.settings.templateDetailsClass + '">' +
+                '<div class="' + this.settings.templateValueClass + '">' +
+                  objects.records[0].html +
+                '</div>' +
               '</div>';
 
           // otherwise recurse through array of relational connection or records arrays
@@ -328,14 +338,14 @@
           var temp5 =  '<span class="' + this.settings.templateValueClass + '">' + temp3 + '</span>';
 
 
-          _buffer += '<div>' + temp4 + temp5 + '</div>';
+          _buffer += '<div class="' + this.settings.templateDetailsClass + '">' + temp4 + temp5 + '</div>';
         } else {
           // @todo proper error
           console.log('Knack Object: unexpected error');
         }
       }
 
-      if ( 
+      if (
         this.settings.debug === true &&
         recursionLevel === 0
       ) {
@@ -348,7 +358,7 @@
     /**
      * renders an html string into a Knack view
      * @requires  JQuery
-     * @param     {string|array}      html       @optional if array, then html is a KnackObject: get string and render, 
+     * @param     {string|array}      html       @optional if array, then html is a KnackObject: get string and render,
      *                                           if string: render string
      * @param     {string|undefined}  elementId  @optional the HTML element ID to append the HTML to
      *                                           if no elementID is passed, then append an
@@ -377,7 +387,7 @@
 
       if ( $element.length ) {
         $element.append( htmlString );
-      
+
         //$('.kn-scenes:first').append( '<div class="kn_scene"><div class="kn_view">' + htmlString + '</div></div>' );
       }
     },
