@@ -86,11 +86,15 @@
       'templateKey'   : '',
       'templateValue' : '',
 
-      /* javascript to show a throbber while function runs */
-      'showSpinner' : function() {Knack.showSpinner();},
+      'templateWrapperClass' : 'kn-object kn-scene',
+      'templateSectionClass' : 'kn-view',
+      'templateRecordClass'  : 'kn-details',
+      'templateRecordHeader' : 'h2',
+      'templateKeyClass'     : 'kn-label',
+      'templateValueClass'   : 'kn-value',
 
-      /* javascript to hide a throbber once function finishes */
-      'hideSpinner'  : function() {Knack.hideSpinner();},
+
+
     },
 
     /**
@@ -263,7 +267,9 @@
 
             // create header based on level of relationship,
             if ( recursionLevel === 0 ) {
-              _buffer += '<h2>' + objects.label + '</h2>';
+              _buffer += '<'+ this.settings.templateRecordHeader +'>' + 
+                objects.label + 
+                '</'+ this.settings.templateRecordHeader +'>';
             }
 
             // and recurse through objects connection
@@ -285,14 +291,23 @@
             objects.records[0].label === this.settings.templateKey &&
             objects.records[1].label === this.settings.templateValue
           ) {
-            _buffer += '<div class="kn-label">' + objects.records[0].html + '</div>';
-            _buffer += '<div class="kn-value">' + objects.records[1].html + '</div>';
+            _buffer += 
+              '<div class="' + this.settings.templateKeyClass + '">' + 
+                objects.records[0].html + 
+              '</div>' +
+              '<div class="' + this.settings.templateValueClass + '">' + 
+                objects.records[1].html + 
+              '</div>';
+
           } else if (
             this.settings.templateValue &&
             objects.records.length   === 1 &&
             objects.records[0].label === this.settings.templateValue
           ) {
-            _buffer += '<div class="kn-value">' + objects.records[0].html + '</div>';
+            _buffer += 
+              '<div class="' + this.settings.templateValueClass + '">' + 
+                objects.records[0].html + 
+              '</div>';
 
           // otherwise recurse through array of relational connection or records arrays
           } else {
@@ -309,8 +324,8 @@
 
           var temp2 = objects.label;
           var temp3 = objects.html;
-          var temp4 =  '<span class="kn-label">' + temp2 + '</span>';
-          var temp5 =  '<span class="kn-value">' + temp3 + '</span>';
+          var temp4 =  '<span class="' + this.settings.templateKeyClass + '">' + temp2 + '</span>';
+          var temp5 =  '<span class="' + this.settings.templateValueClass + '">' + temp3 + '</span>';
 
 
           _buffer += '<div>' + temp4 + temp5 + '</div>';
