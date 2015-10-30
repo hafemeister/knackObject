@@ -337,10 +337,10 @@
       }
 
       if ( typeof elementId === 'undefined' ) {
-        elementId = this.settings.elementId;
+        $element = $('.kn_scenes:first');
+      } else {
+        $element = $( '#' + elementId );
       }
-
-      $element = $( '#' + elementId );
 
       if ( $element.length ) {
         $element.append( htmlString );
