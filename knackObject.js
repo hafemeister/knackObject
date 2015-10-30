@@ -258,17 +258,6 @@
       } else {
         if( objects.type === 'connection' ) {
 
-          //check for special case
-          if (
-            objects.connections.length   === 2 &&
-            objects.connections[0].label === 'Title' &&
-            objects.connections[1].label === 'Detail'
-          ) {
-            _buffer += '<div class="kn-label">' + objects.connections[0].html + '</div>' +
-              '<div class="kn-value">' + objects.connections[1].html + '</div>';
-
-          // otherwise recurse through array of relational connection or records arrays
-          } else {
 
             // create header based on level of relationship,
             if ( recursionLevel === 0 ) {
@@ -279,14 +268,27 @@
             for ( x = 0, l=  objects.connections.length; x < l; x++ ) {
               _buffer += this.template( objects.connections[x], 1 );
             }
-          }
+    
 
         // otherwise, check if the objects variable has a "records" array of objets
         // if it does, then we are inside a relational child
         // so recurse through the array of records
         } else if ( typeof objects.records !== 'undefined' ) {
-          for ( x = 0, l=  objects.records.length; x < l; x++ ) {
-            _buffer += this.template( objects.records[x], 2 );
+          
+          //check for special case
+          if (
+            objects.records.length   === 2 &&
+            objects.records[0].label === 'Title' &&
+            objects.records[1].label === 'Detail'
+          ) {
+            _buffer += '<div class="kn-label">' + objects.records[0].html + '</div>' +
+              '<div class="kn-value">' + objects.records[1].html + '</div>';
+
+          // otherwise recurse through array of relational connection or records arrays
+          } else {
+            for ( x = 0, l=  objects.records.length; x < l; x++ ) {
+              _buffer += this.template( objects.records[x], 2 );
+            }
           }
 
         // otherwise objects is not relational, add ojects' label and html details to template
@@ -297,11 +299,11 @@
 
           var temp2 = objects.label;
           var temp3 = objects.html;
-          var temp4 =  '<div class="kn-label">' + temp2 + '</div>';
-          var temp5 =  '<div class="kn-value">' + temp3 + '</div>';
+          var temp4 =  '<span class="kn-label">' + temp2 + '</span>';
+          var temp5 =  '<span class="kn-value">' + temp3 + '</span>';
 
 
-          _buffer += temp4 + temp5;
+          _buffer += '<div>' + temp4 + temp5 + '</div>';
         } else {
           // @todo proper error
           console.log('Knack Object: unexpected error');
