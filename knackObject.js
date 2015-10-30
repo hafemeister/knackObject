@@ -294,6 +294,9 @@
           typeof objects.label !== 'undefined' &&
           typeof objects.html  !== 'undefined'
         ) {
+
+          var temp = typeof objects.label;
+          
           _buffer += '<div><span class="knackObjectLabel">' + objects.label + '</span>' +
             '<span class="knackObjectDetails'> + objects.html + '</span></div>';
         } else {
