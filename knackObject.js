@@ -344,15 +344,15 @@
       }
 
       if ( typeof elementId === 'undefined' ) {
-        $element = $('.kn_scenes:first');
+        $element = $('.kn-scenes:first');
       } else {
         $element = $( '#' + elementId );
       }
 
       if ( $element.length ) {
         $element.append( htmlString );
-      } else {
-        $('.kn_scenes:first').append( '<div class="kn_scene"><div class="kn_view">' + htmlString + '</div></div>' );
+      
+        //$('.kn-scenes:first').append( '<div class="kn_scene"><div class="kn_view">' + htmlString + '</div></div>' );
       }
     },
 
