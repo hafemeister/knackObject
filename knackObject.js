@@ -3,6 +3,8 @@
 /**
  * crawls through a knack object by making the dirty API queries to mimic full relational queru responces.
  * @param {object} options [ see prototype defaults for description ]
+ * @author Jason O'brien 
+ * @licence MIT license
  */
 
 ( function( window, $, undefined ) {
