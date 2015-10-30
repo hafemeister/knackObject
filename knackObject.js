@@ -320,6 +320,7 @@
      */
     render : function ( html, elementId ) {
       var $element = {};
+      var htmlString = '';
 
       if ( typeof html === 'undefined' ) {
         htmlString = this.template();
