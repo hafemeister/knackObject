@@ -296,13 +296,12 @@
         ) {
 
           var temp = typeof objects.label;
-          var temp2 = '<div><span class="knackObjectLabel">' + objects.label + '</span>' +
-            '<span class="knackObjectDetails'> + objects.html + '</span></div>';
-          var temp3 = '<div><span class="knackObjectLabel">' + objects.label.toString() + '</span>' +
-            '<span class="knackObjectDetails'> + objects.html.toString() + '</span></div>';
+          var temp2 = objects.label;
+          var temp3 = objects.html;
+          var temp4 = '<div><span class="knackObjectLabel">' + temp2 + '</span>' +
+            '<span class="knackObjectDetails'> + temp3 + '</span></div>';
 
-          _buffer += '<div><span class="knackObjectLabel">' + objects.label + '</span>' +
-            '<span class="knackObjectDetails'> + objects.html + '</span></div>';
+          _buffer += temp4;
         } else {
           // @todo proper error
           console.log('Knack Object: unexpected error');
