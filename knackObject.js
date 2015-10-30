@@ -278,29 +278,22 @@
         } else if ( typeof objects.records !== 'undefined' ) {
           
           //check for special case
-          if ( this.settings.templateValue ) {
-          
-            if (
-              objects.records.length   === 2 &&
-              objects.records[1].label === this.settings.templateValue
-            ) {
-              _buffer += '<div class="kn-value">' + objects.records[1].html + '</div>';
+          if ( 
+            this.settings.templateValue &&
+            this.settings.templateKey &&
+            objects.records.length   === 2 &&
+            objects.records[0].label === this.settings.templateKey &&
+            objects.records[1].label === this.settings.templateValue
+          ) {
+            _buffer += '<div class="kn-label">' + objects.records[0].html + '</div>';
+            _buffer += '<div class="kn-value">' + objects.records[1].html + '</div>';
+          } else if (
+            this.settings.templateValue &&
+            objects.records.length   === 1 &&
+            objects.records[0].label === this.settings.templateValue
+          ) {
+            buffer += '<div class="kn-value">' + objects.records[0].html + '</div>';
 
-            } else if (
-              objects.records.length   === 1 &&
-              objects.records[0].label === this.settings.templateValue
-            ) {
-              _buffer += '<div class="kn-value">' + objects.records[0].html + '</div>';
-            }
-
-            if ( this.settings.templateKey ) {
-              if (
-                objects.records.length   === 2 &&
-                objects.records[0].label === this.settings.templateKey
-              ) {
-                _buffer += '<div class="kn-label">' + objects.records[0].html + '</div>';
-              }
-            }
           // otherwise recurse through array of relational connection or records arrays
           } else {
             for ( x = 0, l=  objects.records.length; x < l; x++ ) {
