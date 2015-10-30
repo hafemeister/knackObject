@@ -302,8 +302,8 @@
         this.settings.debug === true &&
         typeof recursionLevel === 'undefined'
       ) {
-        log.console( 'KnackObject HTML Template' );
-        log.console( _buffer );
+        console.log( 'KnackObject HTML Template' );
+        console.log( _buffer );
       }
       return _buffer;
     },
