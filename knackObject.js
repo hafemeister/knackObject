@@ -226,7 +226,7 @@
     template : function ( objects, recursionLevel ) {
 
       var
-        _buffer = {},
+        _buffer = '',
         x,
         l;
 
