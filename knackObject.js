@@ -279,7 +279,7 @@
           if (
             objects.records.length   === 2 &&
             objects.records[0].label === 'Title' &&
-            objects.records[1].label === 'Detail'
+            objects.records[1].label === 'Details'
           ) {
             _buffer += '<div class="kn-label">' + objects.records[0].html + '</div>' +
               '<div class="kn-value">' + objects.records[1].html + '</div>';
