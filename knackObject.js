@@ -296,7 +296,11 @@
         ) {
 
           var temp = typeof objects.label;
-          
+          var temp2 = '<div><span class="knackObjectLabel">' + objects.label + '</span>' +
+            '<span class="knackObjectDetails'> + objects.html + '</span></div>';
+          var temp3 = '<div><span class="knackObjectLabel">' + objects.label.toString() + '</span>' +
+            '<span class="knackObjectDetails'> + objects.html.toString() + '</span></div>';
+
           _buffer += '<div><span class="knackObjectLabel">' + objects.label + '</span>' +
             '<span class="knackObjectDetails'> + objects.html + '</span></div>';
         } else {
@@ -307,7 +311,7 @@
 
       if ( 
         this.settings.debug === true &&
-        typeof recursionLevel === 'undefined'
+        typeof recursionLevel === 0
       ) {
         console.log( 'KnackObject HTML Template' );
         console.log( _buffer );
