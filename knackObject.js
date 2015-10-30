@@ -251,15 +251,15 @@
         if (
           objects.connection.length   === 2 &&
           objects.connection[0].label === 'Title' &&
-          objects.connection[0].label === 'Detail'
+          objects.connection[1].label === 'Detail'
         ) {
-          _buffer += '<div class="knackObjectLabel">' + objects.connection[1].html + '</div>' +
+          _buffer += '<div class="knackObjectLabel">' + objects.connection[0].html + '</div>' +
             '<div class="knackObjectDetails">' + objects.connection[1].html + '</div>';
 
         // otherwise recurse through array of relational connection or records arrays
         } else {
-          for ( x = 0, l = objects.length; x < l; x++ ) {
-              _buffer += this.template( objects[x], level );
+          for ( x = 0, l = objects.connection.length; x < l; x++ ) {
+              _buffer += this.template( objects.connection[x], level );
           }
         }
 
@@ -278,7 +278,7 @@
           _buffer += template( objects.connections[x], 1 );
         }
 
-      // otherwise, check if the objects variable has a "records" key
+      // otherwise, check if the objects variable has a "records" array of objets
       // if it does, then we are inside a relational child
       // so recurse through the array of records
       } else if ( typeof objects.records !== 'undefined' ) {
