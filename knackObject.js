@@ -1,11 +1,15 @@
-/*jslint debug: true, loopfunc: true */
-
 /**
- * crawls through a knack object by making the dirty API queries to mimic full relational queru responces.
- * @param {object} options [ see prototype defaults for description ]
- * @author Jason O'brien
- * @licence MIT license
+ * KnackObject. a relational getter and templater for the KnackAPI
+ * https://github.com/jason0brien/knackObject
+ *
+ * Coyripght 2015, Jason O'brien jason.w.obrien@gmail.com
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * @requires JQuery
+ * @param {object} options @see KnackObject.prototype.defaults
+
  */
+
+/*jslint debug: true, loopfunc: true */
 
 ( function( window, $, undefined ) {
   'use strict';
@@ -15,8 +19,8 @@
     /**
      * creates a new object, based on the defaults extended by options.
      * @param  {object}           defaults [ see prototype.defaults for descriptions ]
-     * @param  {object|undefined} options  [ see examples ]
-     * @return {object}           the defaults extended by options.
+     * @param  {object|undefined} options  [ see example.js ]
+     * @return {object}
      */
     function extend ( defaults, options ) {
       var extended = Object.create( defaults );
@@ -44,15 +48,15 @@
         'X-Knack-REST-API-Key'  : this.settings.apiKey
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        console.log("error " + textStatus);
-        console.log("incoming Text " + jqXHR.responseText);
+        console.log("KnackObject AJAX Error:" + textStatus);
+        if (! jqXHR.responseText ) {
+          console.log("KnackObject AJAX Error, incoming Text " + jqXHR.responseText);
+        }
       } 
     } );
 
     if ( this.settings.renderNow === true ) {
-      //this.settings.showSpinner.call();
       this.render();
-      //this.settings.hideSpinner.call();
     }
   };
 
@@ -147,7 +151,9 @@
     },
 
     /**
-       * recursivly coalates a knack object to show the field labels and the records
+       * queries the Knack API for the recordId in the objectId 
+       *
+       * 
        * if the record data is a connection (relation), then coalate its data too
        * @param  {string|undefined} objectId   @optional the identifier of the knack object to query
        * @param  {string|undefined} recordId   @optional the identifier of the record in the object to query
