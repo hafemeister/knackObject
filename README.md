@@ -87,13 +87,13 @@ knackObject = [
 
 ###A Filthy Example
 
-This custom cose cam be put in your knack app custom javascript
+This custom code cam be put in your Knack app custom javascript
 ```javascript
 
    // Example 2: autorun KnackObject.render when knack app renders 'view_1'
 
    $( document ).on( 'knack-page-render.view_1', function() {
-      LazyLoad.js(['https://rawgit.com/jason0brien/knackObject/master/knackObject.js'], function () {
+      LazyLoad.js(['https://cdn.rawgit.com/jason0brien/knackObject/master/knackObject.js'], function () {
         var example2 = new KnackObject( {
           appId     : 'your knack API ID',
           apiKey    : 'your knack API key',
