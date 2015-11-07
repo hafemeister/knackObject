@@ -10,17 +10,11 @@ Also included is a simple HTML templater.
 
 ##How does KnackObject work?
 
-###Example time!
-
-####Example 1
-Create a Knack app and define 2 databases in it.  
-Give The first database a "name" and an "address" field.
-Create another database called "My Data" which is referenced in Knack as "object_2".
-
-@todo: show how to get the "object_#" name of a knack database
-
-This database should have 2 fields: A short text field labeled "Introduction" and a "connection" to a record in the first database you created.  
-Fill in some data for both databases...   
+###Example 1
+Create 2 databases in your Knack app.  
+The furst database should have a  Knack "name" and a Knack "address" field.
+Create another database called "My Data" and have it hold a short text field labeled "Introduction" and a "connection" to a record in the first database you created.  
+Fill in some data for both databases.  
 @todo: show how to get the id of a specific record in a knack database
 
 Now we're ready, summon the API!
@@ -34,10 +28,10 @@ var example1 = new KnackObject( {
 } );
 
 // get an object that represents the data for a record in "object_2" that has an ID of "exampleRecord"
-var knackObject1  = example1.get('exampleRecord', 'object_2' );
+var knackObject  = example1.get('exampleRecord', 'object_2' );
 
 /*
-example1 = [ 
+knackObject = [ 
   {
     key: "field_21",
     label: "Introduction":
@@ -91,7 +85,7 @@ example1 = [
 */
 ```
 
-####A Filthy Example
+###A Filthy Example
 
 This custom cose cam be put in your knack app custom javascript
 ```javascript
@@ -109,6 +103,3 @@ This custom cose cam be put in your knack app custom javascript
      } );
   } );
 ```
-
-
-
