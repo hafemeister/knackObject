@@ -13,14 +13,14 @@ Also included is a simple HTML templater.
 ###Example time!
 
 ####Example 1
-Create a Knack app and define 2 databases. The first database could be called "My Information", 
-and each record in it should have "First Name" and a "Last Name" short-text field, as well as a special Knack "address" field labeled... "Address".
+Create a Knack app and define 2 databases in it.  
+Give The first database a "name" and an "address" field.
 Create another database called "My Data" which is referenced in Knack as "object_2".
 
 @todo: show how to get the "object_#" name of a knack database
 
-This database should have 2 fields: A short text field labeled "Introduction" and a "connection" to a record in the "My Information" database. 
-Fill in some data for both databases... 
+This database should have 2 fields: A short text field labeled "Introduction" and a "connection" to a record in the first database you created.  
+Fill in some data for both databases...   
 @todo: show how to get the id of a specific record in a knack database
 
 Now we're ready, summon the API!
@@ -93,20 +93,22 @@ example1 = [
 
 ####A Filthy Example
 
+This custom cose cam be put in your knack app custom javascript
 ```javascript
 
-    // Example 2: autorun KnackObject.render when knack app renders 'view_1'
+   // Example 2: autorun KnackObject.render when knack app renders 'view_1'
 
-    $( document ).on( 'knack-page-render.view_1', function() {
-      var example2 = new KnackObject( {
-        appId     : 'your knack API ID',
-        apiKey    : 'your knack API key',
-        objectId  : 'object_2',
-        recordId  : 'exampleRecordID',
-        renderNow : true
-    } );
+   $( document ).on( 'knack-page-render.view_1', function() {
+      LazyLoad.js(['https://rawgit.com/jason0brien/knackObject/master/knackObject.js'], function () {
+        var example2 = new KnackObject( {
+          appId     : 'your knack API ID',
+          apiKey    : 'your knack API key',
+          objectId  : 'object_2',
+          recordId  : 'exampleRecordID',
+          renderNow : true
+     } );
+  } );
 ```
-
 
 
 
