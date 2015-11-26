@@ -136,7 +136,7 @@
             } );
         } );
 
-        if ( ! _fieldNames ) {
+        if ( ! _fieldnames ) {
           console.error( 'KnackObject could not find the field names for this object: ' + objectId  );
         }
 
@@ -278,7 +278,7 @@
       }
 
       if ( typeof recursionLevel === 'undefined' ) {
-        recursionLevel =0;
+        recursionLevel = 0;
       }
 
       // if objects is an array of objects, loop through them
