@@ -2,14 +2,14 @@
  * KnackObject. a relational getter and templater for the KnackAPI
  * https://github.com/jason0brien/knackObject
  *
- * Coyripght 2015, Jason O'brien jason.w.obrien@gmail.com
- * Dual licensed under the MIT or GPL Version 2 licenses.
+ * Coyright 2015, Jason O'brien jason.w.obrien@gmail.com
+ * MIT or GPL Version 2 license.
+ * 
  * @requires JQuery
  * @param {object} options @see KnackObject.prototype.defaults
-
  */
 
-/*jslint debug: true, loopfunc: true */
+/*jslint loopfunc: true */
 
 ( function( window, $, undefined ) {
   'use strict';
@@ -18,6 +18,7 @@
 
     /**
      * creates a new object, based on the defaults extended by options.
+     * @todo   replace with underscore / lodash equivalent
      * @param  {object}           defaults [ see prototype.defaults for descriptions ]
      * @param  {object|undefined} options  [ see example.js ]
      * @return {object}
@@ -38,11 +39,16 @@
 
     this.settings = extend( this.defaults, options );
 
+    //help jquery bastardize ajax
+    //...in a good way
     $.ajaxSetup( {
-
-      type    : 'GET',
-      cache   : true,
+      
+      /* async:false should throw a depercation warning, 
+       * but we want everything to load synchronously, like a gutterpunk.
+       * so we don't care about the warning
+       */
       async   : false,
+      type    : 'GET',
       headers : {
         'X-Knack-Application-Id': this.settings.appId,
         'X-Knack-REST-API-Key'  : this.settings.apiKey
@@ -91,6 +97,9 @@
       /* when getting the records from the server, skip any record with a label in this array */
       'skipRecord'    : [],
 
+      /* special case...
+       * if
+      */
       'templateKey'   : '',
       'templateValue' : '',
 
@@ -113,18 +122,25 @@
      */
     getFields : function( objectId ){
 
-        var _fields = [];
+        var _fieldnames = [];
         var _this = this;
 
         $.getJSON(
           'https://api.knackhq.com/v1/objects/' + objectId + '/fields',
+
+          //return the "field" object
+          // if it doesn't have a "label", exclude it for sanity.
           function( response ){
-            _fields = response.fields.filter( function( field ) {
+            _fieldnames = response.fields.filter( function( field ) {
               return _this.settings.skipRecord.indexOf( field.label ) === -1;
             } );
         } );
 
-        return _fields;
+        if ( ! _fieldNames ) {
+          console.error( 'KnackObject could not find the field names for this object: ' + objectId  );
+        }
+
+        return _fieldnames;
       },
 
     /**
@@ -146,6 +162,10 @@
         }
       );
 
+      if ( ! _record ) {
+        console.error( 'KnackObject could not find the record: ' + recordId + ' in the object :' + objectId  );
+      }
+
       return _record;
 
     },
@@ -155,8 +175,8 @@
        *
        * 
        * if the record data is a connection (relation), then coalate its data too
-       * @param  {string|undefined} objectId   @optional the identifier of the knack object to query
        * @param  {string|undefined} recordId   @optional the identifier of the record in the object to query
+       * @param  {string|undefined} objectId   @optional the identifier of the knack object to query
        * @param  {object|undefined} fieldnames @optional precomputing the fieldnames during recursion saves ajax requests
        * @return {object}                      the coalated object
        */
@@ -167,18 +187,16 @@
       var _fieldNames = [];
       var _childFieldNames = [];
 
-
+      // get default values for passed variables if they are undefined
       if ( typeof recordId === 'undefined') {
         recordId = this.settings.recordId;
       }
-
-      // get default values for passed variables if they are undefined
       if ( typeof objectId === 'undefined' ) {
         objectId = this.settings.objectId;
       }
 
-      // Get the field names for the object's fields if not provided
-      // this saves pummeling the Knack API more than necessary
+      // Get the field names for the object's fields if not defined
+      // this saves pummeling the Knack API more than necessary during recursion
       if ( typeof fieldnames === 'undefined' ) {
         _fieldNames = this.getFields( objectId );
       } else {
@@ -187,8 +205,8 @@
 
       _records = this.getRecord( recordId, objectId );
 
-      //loop through each field object in the array
-      for ( var x = 0, l = _fieldNames.length; x < l; x++ ) {
+      //loop through each field for the returned object's fields
+      for ( var x = 0, l = _fieldNames.length ; x < l ; x++ ) {
 
         _buffer[x] = _fieldNames[x];
 
@@ -200,7 +218,7 @@
           _buffer[x].connections = [];
 
           // loop through each connection's records and get the "raw" data
-          // their naming convention looks like this "field_21_raw"
+          // the naming convention for the returned object key is like this: "field_21_raw"
             _records[ _fieldNames[x].key +'_raw' ].forEach( function( record, index ) {
 
               //recursivly cooalate the connection's records
@@ -225,6 +243,8 @@
 
       if (
         this.settings.debug &&
+
+        //i don't know why this is important...
         typeof fieldnames === 'undefined'
       ) {
         console.log( 'Knack Object:' );
@@ -242,8 +262,8 @@
     template : function ( objects, recursionLevel ) {
 
       var
-        _buffer = '',
-        x,
+        _buffer = '', 
+        x, 
         l;
 
       // get coallated object if object not passed as variable
@@ -300,6 +320,8 @@
         } else if ( typeof objects.records !== 'undefined' ) {
 
           //check for special case
+          // if the record has 2 fields
+          // and one is labeled as a key and the other is labeled as a value
           if (
             this.settings.templateValue &&
             this.settings.templateKey &&
