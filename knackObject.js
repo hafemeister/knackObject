@@ -10,7 +10,7 @@
  */
 
 /*jslint loopfunc: true */
-
+console.log('knackObject.js read');
 ( function( window, $, undefined ) {
   'use strict';
 
